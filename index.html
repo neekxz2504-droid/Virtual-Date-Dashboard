@@ -14,14 +14,17 @@
     * {
       box-sizing: border-box;
     }
-    body {
+    body, html {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--light-cream);
       color: var(--fire-red);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      height: 100%;
+      overflow-x: hidden;
+      background: var(--light-cream);
+      position: relative;
     }
     header {
       background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
@@ -34,9 +37,34 @@
       text-transform: uppercase;
       user-select: none;
       box-shadow: 0 3px 8px rgba(221, 3, 3, 0.7);
+      position: relative;
+      z-index: 10;
+    }
+    /* Dim background photo */
+    .background {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('YOUR_COUPLE_PHOTO_URL') no-repeat center/cover;
+      filter: brightness(0.15);
+      z-index: -10;
+    }
+    /* Spotlight overlay with cursor-following light */
+    .spotlight {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: -5;
+      background:
+        radial-gradient(
+          circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          rgba(255 255 255 / 0.8),
+          rgba(255 255 255 / 0) 80%
+        ),
+        rgba(0, 0, 0, 0.6);
+      mix-blend-mode: screen;
+      transition: background-position 0.1s ease-out;
     }
     .hero {
-      background: url('https://placekitten.com/1200/400') no-repeat center/cover; /* Replace with your couple photo URL */
       height: 250px;
       display: flex;
       align-items: center;
@@ -45,12 +73,16 @@
       font-size: 1.5rem;
       font-weight: 600;
       text-shadow: 1px 1px 4px var(--fire-red);
+      position: relative;
+      z-index: 10;
     }
     main {
       flex-grow: 1;
       padding: 2rem;
       max-width: 1000px;
       margin: 0 auto;
+      position: relative;
+      z-index: 10;
     }
     p.intro {
       text-align: center;
@@ -118,10 +150,14 @@
       color: var(--fire-red);
       font-size: 0.9rem;
       user-select: none;
+      position: relative;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
+  <div class="background"></div>
+  <div class="spotlight"></div>
   <header>
     ❤️Our Virtual Date Night❤️
   </header>
@@ -211,11 +247,20 @@
         <p>Hehehehehehe</p>
         <button class="btn disabled">Coming Soon</button>
       </div>
-      
     </div>
   </main>
   <footer>
     &copy; 2025 Our Virtual Date Night
   </footer>
+
+  <script>
+    const spotlight = document.querySelector('.spotlight');
+    window.addEventListener('mousemove', e => {
+      let x = e.clientX + 'px';
+      let y = e.clientY + 'px';
+      spotlight.style.setProperty('--mouse-x', x);
+      spotlight.style.setProperty('--mouse-y', y);
+    });
+  </script>
 </body>
 </html>
